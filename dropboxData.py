@@ -1,3 +1,4 @@
+import os
 import dropbox
 from dropbox.files import WriteMode
 
@@ -10,10 +11,11 @@ class TransferData:
         with open(file_from, 'rb') as f:
             dbx.files_upload(f.read(), file_to, mode=WriteMode('overwrite'))
 def main():
-    access_token = '***REMOVED-DROPBOX-TOKEN***'
+    # Read the Dropbox access token from an environment variable — never hard-code secrets.
+    access_token = os.environ["DROPBOX_TOKEN"]
     transferData = TransferData(access_token)
-    file_from = '/Users/madhupaluru/Desktop/WhiteHatjr/text.txt'
-    file_to = '/Applications/WhiteHatDropbox/test.txt'
+    file_from = os.environ.get("SOURCE_FILE", "text.txt")
+    file_to = os.environ.get("DEST_PATH", "/test.txt")
 
     transferData.upload_file(file_from, file_to)
     print("File has been moved")
